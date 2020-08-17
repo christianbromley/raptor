@@ -1,0 +1,13 @@
+Package: raptor
+Type: Package
+Title: Estimating Renal Anti-Pd(l)1 probabiliTy Of Response scores from gene expression data
+Version: 0.1.0
+Author: Christian Bromley
+Maintainer: Christian Bromley <christian.bromley@postgrad.manchester.ac.uk>
+Description: This package contains two functions for computing the RAPTOR, COXIS, Random, and TIS scores on gene expression data. These functions will print missing genes, and STOP if greater than 50% of the variables of one of the predictors are absent. Moreover, these functions will enable stratification based on predictor scores according to cutoff values defined on the training set, and based on proportions of high and low probability of response patients again according to the training dataset.
+License: 
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)
