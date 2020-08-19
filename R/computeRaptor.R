@@ -16,7 +16,7 @@
 #' @param predictor_name the name of the probability of response score estimator, for example "RAPTOR"
 #' @param constant a constant to add to the scores. We will use the minimum value of the sum of the weighted gene expressions
 #' in the training data multiplied by -1 if less than 0.
-#' @return dataframe with sample as rowname and column as predictor score
+#' @return data.frame with sample ID and column as predictor score
 #' @export
 
 
@@ -56,14 +56,17 @@ compute_risk_score <- function(expr,coefs, predictor_name, constant){
 
 }
 
-#' score4models is a wrapper for the compute_risk_score function enabling it to be run over all 4 of the models
+#' raptorise is a wrapper for the compute_risk_score function enabling it to be run over all 4 of the models
 #' @param expr a data frame of gene expression data with genes as column names and samples as rownames.
 #' Ideally expression will be in log2(TPM+1) format. The data frame should also include columns for the MSKCC prognostic score
 #' if the data is from renal cancer patients (column name = "mskcc").
-#' @return dataframe with variables sample name and a column for each predictor method, with the continuous variable, the stratifier based on log2tpm expression data cutoff, and a stratifier based on the proportion of high/low patients in training.
+#'
+#' Note that the COX-IS model contains two coefficients that are 0. Ignore these. If they are missing they will be printed out as missing, but they aren't affecting the model anyway.
+#'
+#' @return data.frame with variables sample name and a column for each predictor method, with the continuous variable, the stratifier based on log2tpm expression data cutoff, and a stratifier based on the proportion of high/low patients in training.
 #' @export
 
-score4models <- function(expr){
+raptorise <- function(expr){
 
   results <- data.frame(Pt = rownames(expr))
   for(i in 1:length(coefficients)){
@@ -71,7 +74,7 @@ score4models <- function(expr){
     const <- constant_list[[i]]
     nam <- names(coefficients)[i]
     cutoff <- log2tpmplusone_cutoffs[[i]]
-    prop_cutoff <- proportions[[i]]
+    prop_cutoff <- proportions[[i]]/100
 
     score <- compute_risk_score(expr,
                                        coefs = coef,
@@ -79,10 +82,10 @@ score4models <- function(expr){
                                        predictor_name = nam)
 
     score[,ncol(score)+1] <- ifelse(score[,1] > cutoff, "High", "Low")
-    names(score)[ncol(score)+1] <- paste(nam, "_tpm.cut")
+    names(score)[ncol(score)] <- paste(nam, "_tpm.cut")
 
     score[,ncol(score)+1] <- ifelse(score[,1] > quantile(score[,1], probs = prop_cutoff), "High", "Low")
-    names(score)[ncol(score)+1] <- paste(nam, "_proportion.cut")
+    names(score)[ncol(score)] <- paste(nam, "_proportion.cut")
 
     results <- merge(results,score,by.x="Pt",by.y="row.names")
   }

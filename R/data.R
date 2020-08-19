@@ -16,7 +16,7 @@
 #'
 #' @format A list of 4 named numeric vectors.
 #' \describe{
-#'  \item{constant_list}{Numeric values giving the weight of each gene within each signature}
+#'  \item{constant_list}{Numeric values giving the weight of each gene within each signature. Note the COXIS model contains a couple of 0 coefficients. Ignore these.}
 #'
 #' }
 #' @source
