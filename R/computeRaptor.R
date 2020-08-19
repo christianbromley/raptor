@@ -82,10 +82,10 @@ raptorise <- function(expr){
                                        predictor_name = nam)
 
     score[,ncol(score)+1] <- ifelse(score[,1] > cutoff, "High", "Low")
-    names(score)[ncol(score)] <- paste(nam, "_tpm.cut")
+    names(score)[ncol(score)] <- paste(nam, "_tpm.cut",sep="")
 
     score[,ncol(score)+1] <- ifelse(score[,1] > quantile(score[,1], probs = prop_cutoff), "High", "Low")
-    names(score)[ncol(score)] <- paste(nam, "_proportion.cut")
+    names(score)[ncol(score)] <- paste(nam, "_proportion.cut",sep="")
 
     results <- merge(results,score,by.x="Pt",by.y="row.names")
   }
