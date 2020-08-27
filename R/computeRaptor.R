@@ -74,7 +74,8 @@ raptorise <- function(expr){
     const <- constant_list[[i]]
     nam <- names(coefficients)[i]
     cutoff <- log2tpmplusone_cutoffs[[i]]
-    prop_cutoff <- proportions[[i]]/100
+    cutoff_sens <- log2tpmplusone_cutoffs_sens[[i]]
+    prop_cutoff_sens <- proportions_sens[[i]]/100
 
     score <- compute_risk_score(expr,
                                        coefs = coef,
@@ -84,8 +85,14 @@ raptorise <- function(expr){
     score[,ncol(score)+1] <- ifelse(score[,1] > cutoff, "High", "Low")
     names(score)[ncol(score)] <- paste(nam, "_tpm.cut",sep="")
 
+    core[,ncol(score)+1] <- ifelse(score[,1] > cutoff_sens, "High", "Low")
+    names(score)[ncol(score)] <- paste(nam, "_tpm.cut2",sep="")
+
     score[,ncol(score)+1] <- ifelse(score[,1] > quantile(score[,1], probs = prop_cutoff), "High", "Low")
     names(score)[ncol(score)] <- paste(nam, "_proportion.cut",sep="")
+
+    score[,ncol(score)+1] <- ifelse(score[,1] > quantile(score[,1], probs = prop_cutoff_sens), "High", "Low")
+    names(score)[ncol(score)] <- paste(nam, "_proportion.cut2",sep="")
 
     results <- merge(results,score,by.x="Pt",by.y="row.names")
   }

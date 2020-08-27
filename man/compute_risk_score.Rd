@@ -19,7 +19,7 @@ if the data is from renal cancer patients (column name = "mskcc").}
 in the training data multiplied by -1 if less than 0.}
 }
 \value{
-dataframe with sample as rowname and column as predictor score
+data.frame with sample ID and column as predictor score
 }
 \description{
 This function will score the likelihood of patient response to immune checkpoint blockade based on 4 different pipelines.
